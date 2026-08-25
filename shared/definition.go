@@ -187,6 +187,7 @@ type DefinitionTargetLXC struct {
 // DefinitionTargetIncusVM represents Incus VM specific options.
 type DefinitionTargetIncusVM struct {
 	Size       uint64 `yaml:"size,omitempty"`
+	BootSize   uint64 `yaml:"boot_size,omitempty"`
 	Filesystem string `yaml:"filesystem,omitempty"`
 }
 

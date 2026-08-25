@@ -23,6 +23,7 @@ func lsblkOutputHelper(t *testing.T, v *vm, args [][]string) func() {
 
 	v.imageFile = f.Name()
 	v.size = 2e8
+	v.bootSize = 1e8
 	defer func() {
 		if err != nil {
 			os.RemoveAll(v.imageFile)
