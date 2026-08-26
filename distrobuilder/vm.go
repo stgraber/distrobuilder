@@ -23,10 +23,11 @@ type vm struct {
 	rootfsDir  string
 	bootfsDir  string
 	size       uint64
+	bootSize   uint64
 	ctx        context.Context
 }
 
-func newVM(ctx context.Context, imageFile, rootfsDir, fs string, size uint64) (*vm, error) {
+func newVM(ctx context.Context, imageFile, rootfsDir, fs string, size uint64, bootSize uint64) (*vm, error) {
 	if fs == "" {
 		fs = "ext4"
 	}
@@ -39,7 +40,11 @@ func newVM(ctx context.Context, imageFile, rootfsDir, fs string, size uint64) (*
 		size = 4294967296
 	}
 
-	return &vm{ctx: ctx, imageFile: imageFile, rootfsDir: rootfsDir, rootFS: fs, size: size}, nil
+	if bootSize == 0 {
+		bootSize = 104857600
+	}
+
+	return &vm{ctx: ctx, imageFile: imageFile, rootfsDir: rootfsDir, rootFS: fs, size: size, bootSize: bootSize}, nil
 }
 
 func (v *vm) getLoopDev() string {
@@ -121,9 +126,10 @@ func (v *vm) createEmptyDiskImage() error {
 
 func (v *vm) createPartitions(args ...[]string) error {
 	if len(args) == 0 {
+		bootSizeK := v.bootSize / 1024
 		args = [][]string{
 			{"--zap-all"},
-			{"--new=1::+100M", "-t 1:EF00"},
+			{fmt.Sprintf("--new=1::+%dK", bootSizeK), "-t 1:EF00"},
 			{"--new=2::", "-t 2:8300"},
 		}
 	}

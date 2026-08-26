@@ -59,6 +59,7 @@ targets:
   incus:
     vm:
       size: 2147483648
+      boot_size: 268435456
       filesystem: ext4
 
 files:
