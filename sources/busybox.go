@@ -63,6 +63,8 @@ cwd="$(pwd)"
 cd "${source_dir}"
 make defconfig
 sed -ri 's/# CONFIG_STATIC .*/CONFIG_STATIC=y/g' .config
+# The tc applet doesn't build against kernel 6.8+ headers (CBQ removal).
+sed -ri 's/^CONFIG_TC=y/# CONFIG_TC is not set/g' .config
 make
 
 cd "${cwd}"
