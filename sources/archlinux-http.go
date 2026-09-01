@@ -45,6 +45,9 @@ func (s *archlinux) Run() error {
 			release, s.definition.Image.ArchitectureMapped)
 		tarball = fmt.Sprintf("%s/%s/%s", s.definition.Source.URL,
 			release, fname)
+	case "loong64":
+		fname = "archlinux-bootstrap-loong64.tar.zst"
+		tarball = fmt.Sprintf("%s/iso/latest/%s", s.definition.Source.URL, fname)
 	case "riscv64":
 		fname = "archriscv-latest.tar.zst"
 		tarball = fmt.Sprintf("%s/images/%s", s.definition.Source.URL, fname)
