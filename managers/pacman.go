@@ -97,15 +97,17 @@ func (m *pacman) setupTrustedKeys() error {
 		return fmt.Errorf("Error initializing with pacman-key: %w", err)
 	}
 
-	var keyring string
+	var keyrings []string
 
 	if slices.Contains([]string{"arm", "arm64"}, runtime.GOARCH) {
-		keyring = "archlinuxarm"
+		keyrings = []string{"archlinuxarm"}
+	} else if runtime.GOARCH == "loong64" {
+		keyrings = []string{"archlinux", "archlinux-lcpu"}
 	} else {
-		keyring = "archlinux"
+		keyrings = []string{"archlinux"}
 	}
 
-	err = shared.RunCommand(m.ctx, nil, nil, "pacman-key", "--populate", keyring)
+	err = shared.RunCommand(m.ctx, nil, nil, "pacman-key", append([]string{"--populate"}, keyrings...)...)
 	if err != nil {
 		return fmt.Errorf("Error populating with pacman-key: %w", err)
 	}
